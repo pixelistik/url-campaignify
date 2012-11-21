@@ -31,10 +31,12 @@ class UrlCampaignify
 		$params = array();
 		parse_str($query, $params);
 		
-		// Add our params
-		$params[$this->campaignKey] = $campaign;
-		if( $keyword ) {
-			$params[$this->keywordKey] = $keyword;
+		// Add our params, if no campaign is there yet
+		if( !isset($params[$this->campaignKey]) ){
+			$params[$this->campaignKey] = $campaign;
+			if( $keyword ) {
+				$params[$this->keywordKey] = $keyword;
+			}
 		}
 		
 		$newQuery = http_build_query($params);
