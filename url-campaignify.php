@@ -5,7 +5,27 @@ class UrlCampaignify
 	private $campaignKey = 'pk_campaign';
 	private $keywordKey = 'pk_keyword';
 	
-	public function campaignify($url, $campaign, $keyword = false) {
+	/**
+	 * Add a campaign and (optionally) keyword param to all URLs in a text
+	 */
+	public function campaignify($text, $campaign, $keyword = false) {
+		// \S+ means: Just take any non-whitespace characters after a http(s)://
+		preg_match_all("/(http|https)\:\/\/\S+/", $text, $urlMatches);
+		
+		foreach( $urlMatches[0] as $url ) {
+			$text = str_replace(
+				$url,
+				$this->campaignifyUrl($url, $campaign, $keyword),
+				$text
+			);
+		}
+		return $text;
+	}
+	
+	/**
+	 * Add a campaign and (optionally) keyword param to a single URL
+	 */
+	protected function campaignifyUrl($url, $campaign, $keyword = false) {
 		// Parse existing querystring into an array
 		$query = parse_url($url, PHP_URL_QUERY);
 		$params = array();
@@ -28,7 +48,10 @@ class UrlCampaignify
 			// remove possible "??" if the URL already had a final "?"
 			$newUrl = str_replace("??", "?", $newUrl);
 		}
-		
+		echo "\nCampaignified\n".
+			"    ".$url."\n".
+			"into\n".
+			"    ".$newUrl."\n";
 		return $newUrl;
 	}
 }
