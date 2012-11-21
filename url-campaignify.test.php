@@ -81,6 +81,30 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $result);
 	}
 	
+	/**
+	 * Test if the conversion leaves existing campaigns alone 
+	 */
+	public function testSingleUrlsExistingCampaign() {
+		// Just a campaign existing, should stay
+		$input = 'http://test.de?pk_campaign=leave-me-alone';
+		$expected = 'http://test.de?pk_campaign=leave-me-alone';
+		$result = $this->uc->campaignify($input, 'override-attempt');
+		$this->assertEquals($expected, $result);
+		
+		// A campaign plus keyword existing
+		$input = 'http://test.de?pk_campaign=leave-me-alone&pk_keyword=me-too';
+		$expected = 'http://test.de?pk_campaign=leave-me-alone&pk_keyword=me-too';
+		$result = $this->uc->campaignify($input, 'override-attempt', 'override-attempt');
+		$this->assertEquals($expected, $result);
+		
+		// A campaign existing, keyword should NOT be added
+		// (keywords mostly make no sense without their campaign)
+		$input = 'http://test.de?pk_campaign=leave-me-alone';
+		$expected = 'http://test.de?pk_campaign=leave-me-alone';
+		$result = $this->uc->campaignify($input, 'override-attempt', 'override-attempt');
+		$this->assertEquals($expected, $result);
+	}
+	
 	/* Tests for entire texts */
 	
 	public function testTextMultipleURLs() {
