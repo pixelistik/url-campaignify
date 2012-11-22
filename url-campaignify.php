@@ -2,30 +2,31 @@
 
 class UrlCampaignify
 {
-	private $campaignKey = 'pk_campaign';
-	private $keywordKey = 'pk_keyword';
+	protected $campaignKey = 'pk_campaign';
+	protected $keywordKey = 'pk_keyword';
+	
+	protected $campaignValue = null;
+	protected $keywordValue = null;
 	
 	/**
 	 * Add a campaign and (optionally) keyword param to all URLs in a text
 	 */
-	public function campaignify($text, $campaign, $keyword = false) {
-		// \S+ means: Just take any non-whitespace characters after a http(s)://
-		preg_match_all("/(http|https)\:\/\/\S+/", $text, $urlMatches);
+	public function campaignify($text, $campaign, $keyword = null) {
+		$this->campaignValue = $campaign;
+		$this->keywordValue = $keyword;
 		
-		foreach( $urlMatches[0] as $url ) {
-			$text = str_replace(
-				$url,
-				$this->campaignifyUrl($url, $campaign, $keyword),
-				$text
-			);
-		}
+		// \S+ means: Just take any non-whitespace characters after a http(s)://
+		$text = preg_replace_callback("/(http|https)\:\/\/\S+/", array($this, 'campaignifyUrl'),$text);
+		
 		return $text;
 	}
 	
 	/**
 	 * Add a campaign and (optionally) keyword param to a single URL
 	 */
-	protected function campaignifyUrl($url, $campaign, $keyword = false) {
+	protected function campaignifyUrl($urlMatches) {
+		$url = $urlMatches[0];
+		
 		// Parse existing querystring into an array
 		$query = parse_url($url, PHP_URL_QUERY);
 		$params = array();
@@ -33,9 +34,9 @@ class UrlCampaignify
 		
 		// Add our params, if no campaign is there yet
 		if( !isset($params[$this->campaignKey]) ){
-			$params[$this->campaignKey] = $campaign;
-			if( $keyword ) {
-				$params[$this->keywordKey] = $keyword;
+			$params[$this->campaignKey] = $this->campaignValue;
+			if( $this->keywordValue ) {
+				$params[$this->keywordKey] = $this->keywordValue;
 			}
 		}
 		

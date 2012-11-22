@@ -128,17 +128,9 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 	 * Text with the same URL repeated twice
 	 */
 	public function testTextMultipleRepeatedURLs() {
-		$input = "Lorem ipsum dolor http://test.com sit 
-		amet, consetetur sadipscing elitr, 
-		sed diam nonumy eirmod tempor invidunt ut labore et dolore magna 
-		aliquyam erat, sed diam voluptua. 
-		At http://test.com";
+		$input = "Lorem http://test.com ipsum http://test.com";
 		
-		$expected = "Lorem ipsum dolor http://test.com/?pk_campaign=news sit 
-		amet, consetetur sadipscing elitr, 
-		sed diam nonumy eirmod tempor invidunt ut labore et dolore magna 
-		aliquyam erat, sed diam voluptua. 
-		At http://test.com?pk_campaign=news";
+		$expected = "Lorem http://test.com?pk_campaign=news ipsum http://test.com?pk_campaign=news";
 		
 		$result = $this->uc->campaignify($input, 'news');
 		$this->assertEquals($expected, $result);
