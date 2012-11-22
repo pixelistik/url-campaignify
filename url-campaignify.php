@@ -7,6 +7,25 @@
  * of your traffic better. This class aims to be a convenient way to add
  * such parameters to any URL or even a string containing multiple URLs.
  */
+ 
+ // URL regex from http://stackoverflow.com/a/2015516/376138
+ // (except beginning/end conditions)
+ define('URL_FORMAT',
+	'/(https?):\/\/'.                                          // protocol
+	'(([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+'.         // username
+	'(:([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+)?'.      // password
+	'@)?(?#'.                                                  // auth requires @
+	')((([a-z0-9]\.|[a-z0-9][a-z0-9-]*[a-z0-9]\.)*'.           // domain segments AND
+	'[a-z][a-z0-9-]*[a-z0-9]'.                                 // top level domain  OR
+	'|((\d|[1-9]\d|1\d{2}|2[0-4][0-9]|25[0-5])\.){3}'.
+	'(\d|[1-9]\d|1\d{2}|2[0-4][0-9]|25[0-5])'.                 // IP address
+	')(:\d+)?'.                                                // port
+	')(((\/+([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)*'. // path
+	'(\?([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)'.      // query string
+	'?)?)?'.                                                   // path and query string optional
+	'(#([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)?'.      // fragment
+	'/i');
+ 
 class UrlCampaignify
 {
 	/**
@@ -69,8 +88,7 @@ class UrlCampaignify
 		$this->campaignValue = $campaign;
 		$this->keywordValue = $keyword;
 		
-		// \S+ means: Just take any non-whitespace characters after a http(s)://
-		$text = preg_replace_callback("/(http|https)\:\/\/\S+/", array($this, 'campaignifyUrl'),$text);
+		$text = preg_replace_callback(URL_FORMAT, array($this, 'campaignifyUrl'),$text);
 		
 		return $text;
 	}
