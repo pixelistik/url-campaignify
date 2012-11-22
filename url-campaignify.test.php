@@ -105,6 +105,16 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $result);
 	}
 	
+	/**
+	 * If a param is another URL (properly encoded), it should be left alone
+	 */
+	public function testSingleUrlsUrlInParam() {
+		$input = 'http://test.de?share=http%3A%2F%2Fexample.org';
+		$expected = 'http://test.de?share=http%3A%2F%2Fexample.org&pk_campaign=news';
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+	}
+	
 	/* Tests for entire texts */
 	
 	public function testTextMultipleURLs() {
