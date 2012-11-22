@@ -157,4 +157,16 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignify($input, 'news');
 		$this->assertEquals($expected, $result);
 	}
+	
+	/**
+	 * Test correct handling of a sentence-ending dot after a URL
+	 */
+	public function testTextUrlEndDot() {
+		$input = "Please go to http://test.com.";
+		
+		$expected = "Please go to http://test.com?pk_campaign=news.";
+		
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+	}
 }
