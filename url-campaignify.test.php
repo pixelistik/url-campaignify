@@ -145,4 +145,16 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignify($input, 'news');
 		$this->assertEquals($expected, $result);
 	}
+	
+	/**
+	 * Test correct handling of URLs in <> brackets
+	 */
+	public function testTextBracketedUrl() {
+		$input = "Lorem <http://test.com>";
+		
+		$expected = "Lorem <http://test.com?pk_campaign=news>";
+		
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+	}
 }
