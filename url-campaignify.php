@@ -13,6 +13,7 @@
 // URL regex from http://stackoverflow.com/a/2015516/376138
 // (except beginning/end conditions)
 define('URL_PATTERN',
+	'/((href\s*=\s*\")?)'.                                     // optional preceding href attribute
 	'((https?):\/\/'.                                          // protocol
 	'(([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+'.         // username
 	'(:([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+)?'.      // password
@@ -26,7 +27,7 @@ define('URL_PATTERN',
 	'(\?([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)'.      // query string
 	'?)?)?'.                                                   // path and query string optional
 	'(#([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)?'.      // fragment
-	')');
+	')/i');
 
 class UrlCampaignify
 {
@@ -47,54 +48,75 @@ class UrlCampaignify
 	 * Value for the keyword that should be added to URLs
 	 */
 	protected $keywordValue = null;
+	
+	/**
+	* If set to true, UrlCampaignify::campaignify() will only look at URLs
+	* in a href="" HTML attribute.
+	*/
+	protected $hrefOnly = false;
 
 	/**
 	 * Add a campaign and (optionally) keyword param to a single URL
 	 */
 	protected function campaignifyUrl($urlMatches) {
-		// Full regex match is passed at index 0
-		// First bracketed pattern (entire URL) at 1
-		$url = $urlMatches[1];
+		// Full regex match is passed at index [0]
+		// Entire URL is at [3]
+		// Possible href=" is at [1]
+		$url = $urlMatches[3];
+		$hrefPart = $urlMatches[1];
 
-		// Parse existing querystring into an array
-		$query = parse_url($url, PHP_URL_QUERY);
-		$params = array();
-		parse_str($query, $params);
-
-		// Add our params, if no campaign is there yet, plus keyword if given
-		if( !isset($params[$this->campaignKey]) ){
-			$params[$this->campaignKey] = $this->campaignValue;
-			if( $this->keywordValue ) {
-				$params[$this->keywordKey] = $this->keywordValue;
+		if( $this->hrefOnly && $hrefPart === "" ) {
+			// If href only and we are not in a href: do nothing
+			$newUrl = $url;
+		} else {
+			/* Do the thing: */
+			// Parse existing querystring into an array
+			$query = parse_url($url, PHP_URL_QUERY);
+			$params = array();
+			parse_str($query, $params);
+	
+			// Add our params, if no campaign is there yet, plus keyword if given
+			if( !isset($params[$this->campaignKey]) ){
+				$params[$this->campaignKey] = $this->campaignValue;
+				if( $this->keywordValue ) {
+					$params[$this->keywordKey] = $this->keywordValue;
+				}
+			}
+	
+			$newQuery = http_build_query($params);
+	
+			if( $query ){
+				// If there was a querystring already, replace it
+				$newUrl = str_replace($query, $newQuery, $url);
+			} else {
+				// or just append the new one
+				$newUrl = $url . '?' . $newQuery;
+				// remove possible "??" if the URL already had a final "?"
+				$newUrl = str_replace("??", "?", $newUrl);
 			}
 		}
-
-		$newQuery = http_build_query($params);
-
-		if( $query ){
-			// If there was a querystring already, replace it
-			$newUrl = str_replace($query, $newQuery, $url);
-		} else {
-			// or just append the new one
-			$newUrl = $url . '?' . $newQuery;
-			// remove possible "??" if the URL already had a final "?"
-			$newUrl = str_replace("??", "?", $newUrl);
-		}
-
-		return $newUrl;
+		
+		// Re-attach possible href="
+		return $hrefPart . $newUrl;
 	}
 
 	/**
 	 * Add a campaign and (optionally) keyword param to all URLs in a text
 	 */
-	public function campaignify($text, $campaign, $keyword = null) {
+	public function campaignify($text, $campaign, $keyword = null, $hrefOnly = false) {
 		$this->campaignValue = $campaign;
 		$this->keywordValue = $keyword;
+		$this->hrefOnly = $hrefOnly;
 		
-		$regex = '/' . URL_PATTERN . '/i';
-		
-		$text = preg_replace_callback($regex, array($this, 'campaignifyUrl'),$text);
+		$text = preg_replace_callback(URL_PATTERN, array($this, 'campaignifyUrl'),$text);
 
 		return $text;
+	}
+	
+	/**
+	 * Add a campaign and (optionally) keyword param to all URLs in href attributes
+	 */
+	public function campaignifyHref($text, $campaign, $keyword = null) {
+		return $this->campaignify($text, $campaign, $keyword, true);
 	}
 }

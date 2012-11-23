@@ -169,4 +169,20 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignify($input, 'news');
 		$this->assertEquals($expected, $result);
 	}
+	
+	/* Tests for only handling href attributes in texts */
+
+	/**
+	 * Test if a campaignifyHref() only picks up URLs in href attribute
+	 */
+	public function testTextMultipleURLsHrefOnly() {
+		$input = 'Hello. <a href="http://test.com">Page</a>.'.
+			'More http://test.com/nope.htm';
+		
+		$expected = 'Hello. <a href="http://test.com?pk_campaign=yes">Page</a>.'.
+			'More http://test.com/nope.htm';
+			
+		$result = $this->uc->campaignifyHref($input, 'yes');
+		$this->assertEquals($expected, $result);
+	}
 }
