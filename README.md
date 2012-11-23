@@ -54,3 +54,14 @@ into
 
 Have a look at the test cases to see which situations and edge cases have been
 covered -- or not.
+
+#### Domains
+
+It only makes sense to add campaigns if you actually analyse them. This implies
+that you control the site and its analytics tool. You can restrict UrlCampaignify
+to only work on URLs on a given Domain. Just pass it to the constructor
+
+    $uc = new UrlCampaignify('my-site.tld')
+
+Note that subdomains are not automatically included, so the above instance will
+*not* touch URLs on `www.my-site.tld`.

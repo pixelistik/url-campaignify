@@ -114,6 +114,37 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignify($input, 'news');
 		$this->assertEquals($expected, $result);
 	}
+	
+	public function testDomainSpecific() {
+		$this->uc = new UrlCampaignify('test.com');
+		
+		// Campaigify specified domain
+		$input = 'http://test.com';
+		$expected = 'http://test.com?pk_campaign=news';
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+		
+		$input = 'http://test.com/?param=one';
+		$expected = 'http://test.com/?param=one&pk_campaign=news';
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+		
+		// Do not campaignify other domains, including subdomains of the configured
+		$input = 'http://www.test.com';
+		$expected = 'http://www.test.com';
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+		
+		$input = 'http://test.de';
+		$expected = 'http://test.de';
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+		
+		$input = 'http://test.de/1.html';
+		$expected = 'http://test.de/1.html';
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+	}
 
 	/* Tests for entire texts */
 

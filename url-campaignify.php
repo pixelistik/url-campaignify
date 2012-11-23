@@ -54,6 +54,16 @@ class UrlCampaignify
 	* in a href="" HTML attribute.
 	*/
 	protected $hrefOnly = false;
+	
+	/**
+	 * String. If specified, only URLs for that domain will be campaignified.
+	 * Note that www.domain.tld and domain.tld are different!
+	 */
+	protected $domain = null;
+	
+	public function __construct($domain = null) {
+		$this->domain = $domain;
+	}
 
 	/**
 	 * Add a campaign and (optionally) keyword param to a single URL
@@ -61,11 +71,18 @@ class UrlCampaignify
 	protected function campaignifyUrl($urlMatches) {
 		// Full regex match is passed at index [0]
 		// Entire URL is at [3]
+		// Domain.tld is at [9]
 		// Possible href=" is at [1]
 		$url = $urlMatches[3];
+		$domain = $urlMatches[9];
 		$hrefPart = $urlMatches[1];
 
-		if( $this->hrefOnly && $hrefPart === "" ) {
+		if(
+			// Do nothing if URL is not in a href attr or specified domain
+			// (if configured this way)
+			($this->hrefOnly && $hrefPart === "") ||
+			($this->domain && $this->domain != $domain)
+		) {
 			// If href only and we are not in a href: do nothing
 			$newUrl = $url;
 		} else {
