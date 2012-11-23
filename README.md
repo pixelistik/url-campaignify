@@ -64,4 +64,7 @@ to only work on URLs on a given Domain. Just pass it to the constructor
     $uc = new UrlCampaignify('my-site.tld')
 
 Note that subdomains are not automatically included, so the above instance will
-*not* touch URLs on `www.my-site.tld`.
+*not* touch URLs on `www.my-site.tld`. You can specify multiple domains as an
+array, though:
+
+    $uc = new UrlCampaignify(array('my-site.tld', 'www.my-site.tld', 'my-other-site.tld'))

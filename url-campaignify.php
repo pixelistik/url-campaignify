@@ -56,12 +56,16 @@ class UrlCampaignify
 	protected $hrefOnly = false;
 	
 	/**
-	 * String. If specified, only URLs for that domain will be campaignified.
-	 * Note that www.domain.tld and domain.tld are different!
+	 * String (one) or array (multiple strings). If specified, only URLs for 
+	 * these domain(s) will be campaignified.
+	 * Note that www.domain.tld and domain.tld have to be specified separately.
 	 */
 	protected $domain = null;
 	
 	public function __construct($domain = null) {
+		if( is_string($domain) ) {
+			$domain = array($domain);
+		}
 		$this->domain = $domain;
 	}
 
@@ -77,13 +81,12 @@ class UrlCampaignify
 		$domain = $urlMatches[9];
 		$hrefPart = $urlMatches[1];
 
-		if(
-			// Do nothing if URL is not in a href attr or specified domain
-			// (if configured this way)
-			($this->hrefOnly && $hrefPart === "") ||
-			($this->domain && $this->domain != $domain)
-		) {
-			// If href only and we are not in a href: do nothing
+		// Are we on hrefOnly and not in a href attribute?
+		$skipOnHref = $this->hrefOnly && $hrefPart === "";
+		// Is a domain configured and we are not on it?
+		$skipOnDomain = $this->domain && !in_array($domain, $this->domain);
+		
+		if( $skipOnHref || $skipOnDomain ) {
 			$newUrl = $url;
 		} else {
 			/* Do the thing: */

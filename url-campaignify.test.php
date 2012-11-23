@@ -145,6 +145,39 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignify($input, 'news');
 		$this->assertEquals($expected, $result);
 	}
+	
+	public function testDomainSpecificMultiple() {
+		$this->uc = new UrlCampaignify(
+			array('test.com', 'www.test.com', 'testing.com')
+		);
+		
+		// Campaignify specified domains
+		$input = 'http://test.com';
+		$expected = 'http://test.com?pk_campaign=news';
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+		
+		$input = 'http://www.test.com';
+		$expected = 'http://www.test.com?pk_campaign=news';
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+		
+		$input = 'http://testing.com';
+		$expected = 'http://testing.com?pk_campaign=news';
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+		
+		// Do not campaignify other domains
+		$input = 'http://test.de';
+		$expected = 'http://test.de';
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+		
+		$input = 'http://test.de/1.html';
+		$expected = 'http://test.de/1.html';
+		$result = $this->uc->campaignify($input, 'news');
+		$this->assertEquals($expected, $result);
+	}
 
 	/* Tests for entire texts */
 
