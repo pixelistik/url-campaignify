@@ -43,5 +43,14 @@ campaignify all HTTP URLs in it.
 
     $newUrl = $uc->campaignify($text, "newsletter-5", "header-link");
 
+If you are expecting HTML input, it makes sense to only change the URLs
+in `href` attributes. Use `campaignifyHref()` for this. It will turn
+
+    See <a href="http://site.tld">http://site.tld</a> for more information.
+
+into
+
+    See <a href="http://site.tld?pk_campaign=foo">http://site.tld</a> for more information.
+
 Have a look at the test cases to see which situations and edge cases have been
 covered -- or not.
