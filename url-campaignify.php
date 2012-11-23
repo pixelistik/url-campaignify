@@ -6,11 +6,13 @@
  * to add a campaign and a keyword to a URL, so you can track the sources
  * of your traffic better. This class aims to be a convenient way to add
  * such parameters to any URL or even a string containing multiple URLs.
+ *
+ * MIT licensed, see LICENSE
  */
- 
- // URL regex from http://stackoverflow.com/a/2015516/376138
- // (except beginning/end conditions)
- define('URL_FORMAT',
+
+// URL regex from http://stackoverflow.com/a/2015516/376138
+// (except beginning/end conditions)
+define('URL_FORMAT',
 	'/(https?):\/\/'.                                          // protocol
 	'(([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+'.         // username
 	'(:([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+)?'.      // password
@@ -25,7 +27,7 @@
 	'?)?)?'.                                                   // path and query string optional
 	'(#([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)?'.      // fragment
 	'/i');
- 
+
 class UrlCampaignify
 {
 	/**
@@ -36,7 +38,7 @@ class UrlCampaignify
 	 * Name of the URL param for a keyword
 	 */
 	protected $keywordKey = 'pk_keyword';
-	
+
 	/**
 	 * Value for the campaign name that should be added to URLs
 	 */
@@ -45,19 +47,19 @@ class UrlCampaignify
 	 * Value for the keyword that should be added to URLs
 	 */
 	protected $keywordValue = null;
-	
+
 	/**
 	 * Add a campaign and (optionally) keyword param to a single URL
 	 */
 	protected function campaignifyUrl($urlMatches) {
 		// Full regex match is passed at index 0
 		$url = $urlMatches[0];
-		
+
 		// Parse existing querystring into an array
 		$query = parse_url($url, PHP_URL_QUERY);
 		$params = array();
 		parse_str($query, $params);
-		
+
 		// Add our params, if no campaign is there yet, plus keyword if given
 		if( !isset($params[$this->campaignKey]) ){
 			$params[$this->campaignKey] = $this->campaignValue;
@@ -65,9 +67,9 @@ class UrlCampaignify
 				$params[$this->keywordKey] = $this->keywordValue;
 			}
 		}
-		
+
 		$newQuery = http_build_query($params);
-		
+
 		if( $query ){
 			// If there was a querystring already, replace it
 			$newUrl = str_replace($query, $newQuery, $url);
@@ -77,10 +79,10 @@ class UrlCampaignify
 			// remove possible "??" if the URL already had a final "?"
 			$newUrl = str_replace("??", "?", $newUrl);
 		}
-		
+
 		return $newUrl;
 	}
-	
+
 	/**
 	 * Add a campaign and (optionally) keyword param to all URLs in a text
 	 */
@@ -89,7 +91,7 @@ class UrlCampaignify
 		$this->keywordValue = $keyword;
 		
 		$text = preg_replace_callback(URL_FORMAT, array($this, 'campaignifyUrl'),$text);
-		
+
 		return $text;
 	}
 }

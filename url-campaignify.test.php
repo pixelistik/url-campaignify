@@ -6,7 +6,7 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 	public function setUp() {
 		$this->uc = new UrlCampaignify();
 	}
-	
+
 	/* Tests for single URLs */
 	/**
 	 * Test if the conversion works with URLs being fed in that do not have a 
@@ -18,12 +18,12 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$expected = 'http://test.de?pk_campaign=newsletter-nov-2012';
 		$result = $this->uc->campaignify($input, 'newsletter-nov-2012');
 		$this->assertEquals($expected, $result);
-		
+
 		$input = 'http://test.de/kontakt.html';
 		$expected = 'http://test.de/kontakt.html?pk_campaign=newsletter-nov-2012';
 		$result = $this->uc->campaignify($input, 'newsletter-nov-2012');
 		$this->assertEquals($expected, $result);
-		
+
 		// A campaign added plus keyword
 		$input = 'http://test.de';
 		$expected = 'http://test.de?pk_campaign=newsletter-nov-2012&pk_keyword=link1';
@@ -35,7 +35,7 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignify($input, 'newsletter-nov-2012', 'link1');
 		$this->assertEquals($expected, $result);
 	}
-	
+
 	/**
 	 * Test if the conversion works with URLs being fed in that do not have a 
 	 * querystring already, but a "?" at the end
@@ -46,7 +46,7 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignify($input, 'newsletter-nov-2012');
 		$this->assertEquals($expected, $result);
 	}
-	
+
 	/**
 	 * Test if the conversion works with URLs being fed in that have a 
 	 * querystring already
@@ -57,14 +57,14 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$expected = 'http://test.de?param1=one&param2=two&pk_campaign=newsletter-nov-2012';
 		$result = $this->uc->campaignify($input, 'newsletter-nov-2012');
 		$this->assertEquals($expected, $result);
-		
+
 		// A campaign added plus keyword
 		$input = 'http://test.de?p1=one&param2=two';
 		$expected = 'http://test.de?p1=one&param2=two&pk_campaign=newsletter-nov-2012&pk_keyword=link1';
 		$result = $this->uc->campaignify($input, 'newsletter-nov-2012', 'link1');
 		$this->assertEquals($expected, $result);
 	}
-	
+
 	/**
 	 * Test if the conversion properly accepts and produces urlencoded strings
 	 */
@@ -80,7 +80,7 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignify($input, 'newsletter nov,2012', 'link,1');
 		$this->assertEquals($expected, $result);
 	}
-	
+
 	/**
 	 * Test if the conversion leaves existing campaigns alone 
 	 */
@@ -90,13 +90,13 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$expected = 'http://test.de?pk_campaign=leave-me-alone';
 		$result = $this->uc->campaignify($input, 'override-attempt');
 		$this->assertEquals($expected, $result);
-		
+
 		// A campaign plus keyword existing
 		$input = 'http://test.de?pk_campaign=leave-me-alone&pk_keyword=me-too';
 		$expected = 'http://test.de?pk_campaign=leave-me-alone&pk_keyword=me-too';
 		$result = $this->uc->campaignify($input, 'override-attempt', 'override-attempt');
 		$this->assertEquals($expected, $result);
-		
+
 		// A campaign existing, keyword should NOT be added
 		// (keywords mostly make no sense without their campaign)
 		$input = 'http://test.de?pk_campaign=leave-me-alone';
@@ -104,7 +104,7 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignify($input, 'override-attempt', 'override-attempt');
 		$this->assertEquals($expected, $result);
 	}
-	
+
 	/**
 	 * If a param is another URL (properly encoded), it should be left alone
 	 */
@@ -114,9 +114,9 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignify($input, 'news');
 		$this->assertEquals($expected, $result);
 	}
-	
+
 	/* Tests for entire texts */
-	
+
 	public function testTextMultipleURLs() {
 		$input = "Lorem ipsum dolor https://test.com/ sit 
 		amet, consetetur sadipscing elitr, 
@@ -133,7 +133,7 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignify($input, 'news');
 		$this->assertEquals($expected, $result);
 	}
-	
+
 	/**
 	 * Text with the same URL repeated twice
 	 */
@@ -145,27 +145,27 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignify($input, 'news');
 		$this->assertEquals($expected, $result);
 	}
-	
+
 	/**
 	 * Test correct handling of URLs in <> brackets
 	 */
 	public function testTextBracketedUrl() {
 		$input = "Lorem <http://test.com>";
-		
+
 		$expected = "Lorem <http://test.com?pk_campaign=news>";
 		
 		$result = $this->uc->campaignify($input, 'news');
 		$this->assertEquals($expected, $result);
 	}
-	
+
 	/**
 	 * Test correct handling of a sentence-ending dot after a URL
 	 */
 	public function testTextUrlEndDot() {
 		$input = "Please go to http://test.com.";
-		
+
 		$expected = "Please go to http://test.com?pk_campaign=news.";
-		
+
 		$result = $this->uc->campaignify($input, 'news');
 		$this->assertEquals($expected, $result);
 	}
