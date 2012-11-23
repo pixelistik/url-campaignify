@@ -26,12 +26,12 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 
 		// A campaign added plus keyword
 		$input = 'http://test.de';
-		$expected = 'http://test.de?pk_campaign=newsletter-nov-2012&pk_keyword=link1';
+		$expected = 'http://test.de?pk_campaign=newsletter-nov-2012&pk_kwd=link1';
 		$result = $this->uc->campaignify($input, 'newsletter-nov-2012', 'link1');
 		$this->assertEquals($expected, $result);
 		
 		$input = 'http://test.de/impressum.htm';
-		$expected = 'http://test.de/impressum.htm?pk_campaign=newsletter-nov-2012&pk_keyword=link1';
+		$expected = 'http://test.de/impressum.htm?pk_campaign=newsletter-nov-2012&pk_kwd=link1';
 		$result = $this->uc->campaignify($input, 'newsletter-nov-2012', 'link1');
 		$this->assertEquals($expected, $result);
 	}
@@ -60,7 +60,7 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 
 		// A campaign added plus keyword
 		$input = 'http://test.de?p1=one&param2=two';
-		$expected = 'http://test.de?p1=one&param2=two&pk_campaign=newsletter-nov-2012&pk_keyword=link1';
+		$expected = 'http://test.de?p1=one&param2=two&pk_campaign=newsletter-nov-2012&pk_kwd=link1';
 		$result = $this->uc->campaignify($input, 'newsletter-nov-2012', 'link1');
 		$this->assertEquals($expected, $result);
 	}
@@ -71,12 +71,12 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 	public function testSingleUrlsUrlencode() {
 		// Given URL already has urlencoded strings
 		$input = 'http://test.de?p1=one%2Cvalue&param2=two';
-		$expected = 'http://test.de?p1=one%2Cvalue&param2=two&pk_campaign=newsletter-nov-2012&pk_keyword=link1';
+		$expected = 'http://test.de?p1=one%2Cvalue&param2=two&pk_campaign=newsletter-nov-2012&pk_kwd=link1';
 		$result = $this->uc->campaignify($input, 'newsletter-nov-2012', 'link1');
 		$this->assertEquals($expected, $result);
 		// Campaign and keyword have chars that need to be urlencoded, too
 		$input = 'http://test.de?p1=one%2Cvalue&param2=two';
-		$expected = 'http://test.de?p1=one%2Cvalue&param2=two&pk_campaign=newsletter+nov%2C2012&pk_keyword=link%2C1';
+		$expected = 'http://test.de?p1=one%2Cvalue&param2=two&pk_campaign=newsletter+nov%2C2012&pk_kwd=link%2C1';
 		$result = $this->uc->campaignify($input, 'newsletter nov,2012', 'link,1');
 		$this->assertEquals($expected, $result);
 	}
@@ -92,8 +92,8 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $result);
 
 		// A campaign plus keyword existing
-		$input = 'http://test.de?pk_campaign=leave-me-alone&pk_keyword=me-too';
-		$expected = 'http://test.de?pk_campaign=leave-me-alone&pk_keyword=me-too';
+		$input = 'http://test.de?pk_campaign=leave-me-alone&pk_kwd=me-too';
+		$expected = 'http://test.de?pk_campaign=leave-me-alone&pk_kwd=me-too';
 		$result = $this->uc->campaignify($input, 'override-attempt', 'override-attempt');
 		$this->assertEquals($expected, $result);
 

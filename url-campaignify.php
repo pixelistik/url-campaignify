@@ -37,7 +37,7 @@ class UrlCampaignify
 	/**
 	 * Name of the URL param for a keyword
 	 */
-	protected $keywordKey = 'pk_keyword';
+	protected $keywordKey = 'pk_kwd';
 
 	/**
 	 * Value for the campaign name that should be added to URLs
