@@ -13,7 +13,7 @@
 // URL regex from http://stackoverflow.com/a/2015516/376138
 // (except beginning/end conditions)
 define('URL_PATTERN',
-	'/((href\s*=\s*\")?)'.                                     // optional preceding href attribute
+	'/((href\s*=\s*["\'])?)'.                                  // optional preceding href attribute
 	'((https?):\/\/'.                                          // protocol
 	'(([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+'.         // username
 	'(:([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+)?'.      // password

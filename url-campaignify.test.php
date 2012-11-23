@@ -185,4 +185,23 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$result = $this->uc->campaignifyHref($input, 'yes');
 		$this->assertEquals($expected, $result);
 	}
+	
+	/**
+	 * Test for some variations of the href attribute
+	 */
+	public function testHrefAcceptance() {
+		// More whitespace
+		$input = 'Hello. <a href = "http://test.com">Page</a>.';
+		$expected = 'Hello. <a href = "http://test.com?pk_campaign=yes">Page</a>.';
+			
+		$result = $this->uc->campaignifyHref($input, 'yes');
+		$this->assertEquals($expected, $result);
+		
+		// Single quotes
+		$input = "Hello. <a href='http://test.com'>Page</a>.";
+		$expected = "Hello. <a href='http://test.com?pk_campaign=yes'>Page</a>.";
+			
+		$result = $this->uc->campaignifyHref($input, 'yes');
+		$this->assertEquals($expected, $result);
+	}
 }
