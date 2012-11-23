@@ -12,8 +12,8 @@
 
 // URL regex from http://stackoverflow.com/a/2015516/376138
 // (except beginning/end conditions)
-define('URL_FORMAT',
-	'/(https?):\/\/'.                                          // protocol
+define('URL_PATTERN',
+	'((https?):\/\/'.                                          // protocol
 	'(([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+'.         // username
 	'(:([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+)?'.      // password
 	'@)?(?#'.                                                  // auth requires @
@@ -26,7 +26,7 @@ define('URL_FORMAT',
 	'(\?([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)'.      // query string
 	'?)?)?'.                                                   // path and query string optional
 	'(#([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)?'.      // fragment
-	'/i');
+	')');
 
 class UrlCampaignify
 {
@@ -53,7 +53,8 @@ class UrlCampaignify
 	 */
 	protected function campaignifyUrl($urlMatches) {
 		// Full regex match is passed at index 0
-		$url = $urlMatches[0];
+		// First bracketed pattern (entire URL) at 1
+		$url = $urlMatches[1];
 
 		// Parse existing querystring into an array
 		$query = parse_url($url, PHP_URL_QUERY);
@@ -90,7 +91,9 @@ class UrlCampaignify
 		$this->campaignValue = $campaign;
 		$this->keywordValue = $keyword;
 		
-		$text = preg_replace_callback(URL_FORMAT, array($this, 'campaignifyUrl'),$text);
+		$regex = '/' . URL_PATTERN . '/i';
+		
+		$text = preg_replace_callback($regex, array($this, 'campaignifyUrl'),$text);
 
 		return $text;
 	}
