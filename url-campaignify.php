@@ -123,10 +123,10 @@ class UrlCampaignify
 	/**
 	 * Add a campaign and (optionally) keyword param to all URLs in a text
 	 */
-	public function campaignify($text, $campaign, $keyword = null, $hrefOnly = false) {
+	public function campaignify($text, $campaign, $keyword = null) {
 		$this->campaignValue = $campaign;
 		$this->keywordValue = $keyword;
-		$this->hrefOnly = $hrefOnly;
+		$this->hrefOnly = false;
 		
 		$text = preg_replace_callback(URL_PATTERN, array($this, 'campaignifyUrl'),$text);
 
@@ -137,6 +137,12 @@ class UrlCampaignify
 	 * Add a campaign and (optionally) keyword param to all URLs in href attributes
 	 */
 	public function campaignifyHref($text, $campaign, $keyword = null) {
-		return $this->campaignify($text, $campaign, $keyword, true);
+		$this->campaignValue = $campaign;
+		$this->keywordValue = $keyword;
+		$this->hrefOnly = true;
+		
+		$text = preg_replace_callback(URL_PATTERN, array($this, 'campaignifyUrl'),$text);
+
+		return $text;
 	}
 }
