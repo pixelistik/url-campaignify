@@ -50,6 +50,12 @@ class UrlCampaignify
 	protected $keywordValue = null;
 	
 	/**
+	 * Counter that starts at 1 and is increased for every URL found in a
+	 * multiple URL texts that is campaigified. Used for auto-increased keywords.
+	 */
+	protected $urlInTextNumber;
+	
+	/**
 	* If set to true, UrlCampaignify::campaignify() will only look at URLs
 	* in a href="" HTML attribute.
 	*/
@@ -99,7 +105,10 @@ class UrlCampaignify
 			if( !isset($params[$this->campaignKey]) ){
 				$params[$this->campaignKey] = $this->campaignValue;
 				if( $this->keywordValue ) {
-					$params[$this->keywordKey] = $this->keywordValue;
+					// Put URL count into formatted keyword string (if given)
+					$keywordValue = sprintf($this->keywordValue, $this->urlInTextNumber);
+
+					$params[$this->keywordKey] = $keywordValue;
 				}
 			}
 	
@@ -114,6 +123,8 @@ class UrlCampaignify
 				// remove possible "??" if the URL already had a final "?"
 				$newUrl = str_replace("??", "?", $newUrl);
 			}
+			
+			$this->urlInTextNumber++;
 		}
 		
 		// Re-attach possible href="
@@ -126,6 +137,9 @@ class UrlCampaignify
 	public function campaignify($text, $campaign, $keyword = null) {
 		$this->campaignValue = $campaign;
 		$this->keywordValue = $keyword;
+		
+		$this->urlInTextNumber = 1;
+		
 		$this->hrefOnly = false;
 		
 		$text = preg_replace_callback(URL_PATTERN, array($this, 'campaignifyUrl'),$text);
@@ -139,6 +153,9 @@ class UrlCampaignify
 	public function campaignifyHref($text, $campaign, $keyword = null) {
 		$this->campaignValue = $campaign;
 		$this->keywordValue = $keyword;
+		
+		$this->urlInTextNumber = 1;
+		
 		$this->hrefOnly = true;
 		
 		$text = preg_replace_callback(URL_PATTERN, array($this, 'campaignifyUrl'),$text);

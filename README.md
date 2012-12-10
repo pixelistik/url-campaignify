@@ -55,6 +55,26 @@ into
 Have a look at the test cases to see which situations and edge cases have been
 covered -- or not.
 
+#### Auto-number URLs in text blocks
+
+All campaignified URLs in a text block are counted (starting at 1). You can use
+the current number of a URL in your keyword in `sprintf()` style. This is useful
+if you want to differentiate between several identical URLs in one text.
+
+    $uc = new UrlCampaignify();
+    
+    $text = "Here comes the header link: http://my-site.tld".
+            "here is a long and verbose text".
+            "and another link at the end: http://my-site.tld";
+
+    $newUrl = $uc->campaignify($text, "news", "link-%d");
+
+Will give you
+
+> Here comes the header link: http://my-site.tld?pk_campaign=news&pk_kwd=link-1
+> here is a long and verbose text and another link at the end:
+> http://my-site.tld?pk_campaign=news&pk_kwd=link-2";
+
 #### Domains
 
 It only makes sense to add campaigns if you actually analyse them. This implies

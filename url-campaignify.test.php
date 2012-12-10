@@ -234,6 +234,29 @@ class UrlCampaignifyTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals($expected, $result);
 	}
 	
+	/**
+	 * Test formatted keyword string with URL counter
+	 *
+	 * If the keyword contains a sprintf() compatible string with an Integer
+	 * (%d) in it, the URL number of the current URL is inserted. This number
+	 * starts at 1 and is only useful for multiple URL texts.
+	 */
+	public function testAutoIncreasedKeywordFormatting() {
+		$input = "This http://test.com and that http://test.com";
+		$expected = "This http://test.com?pk_campaign=news&pk_kwd=link-1 and ".
+			"that http://test.com?pk_campaign=news&pk_kwd=link-2";
+			
+		$result = $this->uc->campaignify($input, 'news', 'link-%d', true);
+		$this->assertEquals($expected, $result);
+		
+		$input = "This http://test.com and that http://test.com";
+		$expected = "This http://test.com?pk_campaign=news&pk_kwd=1 and ".
+			"that http://test.com?pk_campaign=news&pk_kwd=2";
+			
+		$result = $this->uc->campaignify($input, 'news', '%d', true);
+		$this->assertEquals($expected, $result);
+	}
+	
 	/* Tests for only handling href attributes in texts */
 
 	/**
