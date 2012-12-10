@@ -71,9 +71,9 @@ if you want to differentiate between several identical URLs in one text.
 
 Will give you
 
-> Here comes the header link: http://my-site.tld?pk_campaign=news&pk_kwd=link-1
-> here is a long and verbose text and another link at the end:
-> http://my-site.tld?pk_campaign=news&pk_kwd=link-2";
+    Here comes the header link: http://my-site.tld?pk_campaign=news&pk_kwd=link-1
+    here is a long and verbose text and another link at the end:
+    http://my-site.tld?pk_campaign=news&pk_kwd=link-2";
 
 #### Domains
 
