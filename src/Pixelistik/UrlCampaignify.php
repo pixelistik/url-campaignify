@@ -7,7 +7,10 @@
  * of your traffic better. This class aims to be a convenient way to add
  * such parameters to any URL or even a string containing multiple URLs.
  *
- * MIT licensed, see LICENSE
+ * @package UrlCampaignify
+ * @author  Pixelistik <code@pixelistik.de>
+ * @license MIT licensed, see LICENSE
+ * @link    https://github.com/pixelistik/url-campaignify
  */
 
 namespace Pixelistik;
@@ -33,6 +36,9 @@ define(
     ')/i'
 );
 
+/**
+ * The single utility class
+ */
 class UrlCampaignify
 {
     /**
@@ -72,6 +78,12 @@ class UrlCampaignify
      */
     protected $domain = null;
 
+    /**
+     * Constructor
+     *
+     * @param String/Array $domain Optional. A single string or an array of strings
+     *     that restricts URL modification to URLs of that domain.
+     */
     public function __construct($domain = null)
     {
         if (is_string($domain)) {
@@ -81,7 +93,10 @@ class UrlCampaignify
     }
 
     /**
-     * Add a campaign and (optionally) keyword param to a single URL
+     * Add a campaign and (optionally) keyword param to a single URL. This is
+     *     used as a callback for preg_replace_callback().
+     *
+     * @param Array $urlMatches Matches of a regex, containing URLs.
      */
     protected function campaignifyUrl($urlMatches)
     {
@@ -139,6 +154,12 @@ class UrlCampaignify
 
     /**
      * Add a campaign and (optionally) keyword param to all URLs in a text
+     *
+     * @param string $text     The text in which the URLs should be campaignified.
+     * @param string $campaign The campaign name that should be added.
+     * @param string $keyword  Optional. The keyword that should be added.
+     *
+     * @return string The text with campaignified URLs.
      */
     public function campaignify($text, $campaign, $keyword = null)
     {
@@ -156,6 +177,12 @@ class UrlCampaignify
 
     /**
      * Add a campaign and (optionally) keyword param to all URLs in href attributes
+     *
+     * @param string $text     The text in which the URLs should be campaignified.
+     * @param string $campaign The campaign name that should be added.
+     * @param string $keyword  Optional. The keyword that should be added.
+     *
+     * @return string The text with campaignified URLs.
      */
     public function campaignifyHref($text, $campaign, $keyword = null)
     {
