@@ -1,8 +1,9 @@
 <?php
-//use \Pixelistik\UrlCampaignify;
 namespace Pixelistik;
 
-require_once(dirname(__FILE__).'/../../src/Pixelistik/UrlCampaignify.php');
+require "vendor/autoload.php";
+
+use \Pixelistik\UrlCampaignify;
 
 class UrlCampaignifyTest extends \PHPUnit_Framework_TestCase
 {
