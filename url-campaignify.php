@@ -10,27 +10,32 @@
  * MIT licensed, see LICENSE
  */
 
-// URL regex from http://stackoverflow.com/a/2015516/376138
-// (except beginning/end conditions)
-define('URL_PATTERN',
-	'/((href\s*=\s*["\'])?)'.                                  // optional preceding href attribute
-	'((https?):\/\/'.                                          // protocol
-	'(([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+'.         // username
-	'(:([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+)?'.      // password
-	'@)?(?#'.                                                  // auth requires @
-	')((([a-z0-9]\.|[a-z0-9][a-z0-9-]*[a-z0-9]\.)*'.           // domain segments AND
-	'[a-z][a-z0-9-]*[a-z0-9]'.                                 // top level domain  OR
-	'|((\d|[1-9]\d|1\d{2}|2[0-4][0-9]|25[0-5])\.){3}'.
-	'(\d|[1-9]\d|1\d{2}|2[0-4][0-9]|25[0-5])'.                 // IP address
-	')(:\d+)?'.                                                // port
-	')(((\/+([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)*'. // path
-	'(\?([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)'.      // query string
-	'?)?)?'.                                                   // path and query string optional
-	'(#([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)?'.      // fragment
-	')/i');
-
 class UrlCampaignify
 {
+	/**
+	 * Regex to find URLs
+	 *
+	 * Taken from
+	 * http://stackoverflow.com/a/2015516/376138
+	 * (except added beginning/end conditions)
+	*/
+	const URL_REGEX =
+		'/((href\s*=\s*["\'])?)                                 # optional preceding href attribute
+		((https?):\/\/                                          # protocol
+		(([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+         # username
+		(:([a-z0-9$_\.\+!\*\'\(\),;\?&=-]|%[0-9a-f]{2})+)?      # password
+		@)?(?#                                                  # auth requires @
+		)((([a-z0-9]\.|[a-z0-9][a-z0-9-]*[a-z0-9]\.)*           # domain segments AND
+		[a-z][a-z0-9-]*[a-z0-9]                                 # top level domain  OR
+		|((\d|[1-9]\d|1\d{2}|2[0-4][0-9]|25[0-5])\.){3}
+		(\d|[1-9]\d|1\d{2}|2[0-4][0-9]|25[0-5])                 # IP address
+		)(:\d+)?                                                # port
+		)(((\/+([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)* # path
+		(\?([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)      # query string
+		?)?)?                                                   # path and query string optional
+		(#([a-z0-9$_\.\+!\*\'\(\),;:@&=-]|%[0-9a-f]{2})*)?      # fragment
+		))/ix';
+
 	/**
 	 * Name of the URL param for a campaign
 	 */
@@ -141,8 +146,8 @@ class UrlCampaignify
 		$this->urlInTextNumber = 1;
 		
 		$this->hrefOnly = false;
-		
-		$text = preg_replace_callback(URL_PATTERN, array($this, 'campaignifyUrl'),$text);
+
+		$text = preg_replace_callback(self::URL_REGEX, array($this, 'campaignifyUrl'),$text);
 
 		return $text;
 	}
@@ -157,8 +162,8 @@ class UrlCampaignify
 		$this->urlInTextNumber = 1;
 		
 		$this->hrefOnly = true;
-		
-		$text = preg_replace_callback(URL_PATTERN, array($this, 'campaignifyUrl'),$text);
+
+		$text = preg_replace_callback(self::URL_REGEX, array($this, 'campaignifyUrl'),$text);
 
 		return $text;
 	}
