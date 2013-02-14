@@ -146,8 +146,8 @@ class UrlCampaignify
 		$this->urlInTextNumber = 1;
 		
 		$this->hrefOnly = false;
-		
-		$text = preg_replace_callback(URL_PATTERN, array($this, 'campaignifyUrl'),$text);
+
+		$text = preg_replace_callback(self::URL_REGEX, array($this, 'campaignifyUrl'),$text);
 
 		return $text;
 	}
@@ -162,8 +162,8 @@ class UrlCampaignify
 		$this->urlInTextNumber = 1;
 		
 		$this->hrefOnly = true;
-		
-		$text = preg_replace_callback(URL_PATTERN, array($this, 'campaignifyUrl'),$text);
+
+		$text = preg_replace_callback(self::URL_REGEX, array($this, 'campaignifyUrl'),$text);
 
 		return $text;
 	}
