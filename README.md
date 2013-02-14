@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pixelistik/url-campaignify.png)](https://travis-ci.org/pixelistik/url-campaignify)
+
 ## URL-Campaignify
 
 ### Background
