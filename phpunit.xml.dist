@@ -18,6 +18,7 @@
     testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
     strict="false"
     verbose="false"
+    bootstrap="vendor/autoload.php"
 >
 
     <testsuites>

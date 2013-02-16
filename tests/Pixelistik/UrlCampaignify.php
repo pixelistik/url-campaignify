@@ -1,8 +1,6 @@
 <?php
 namespace Pixelistik;
 
-require "vendor/autoload.php";
-
 use \Pixelistik\UrlCampaignify;
 
 class UrlCampaignifyTest extends \PHPUnit_Framework_TestCase
@@ -14,7 +12,7 @@ class UrlCampaignifyTest extends \PHPUnit_Framework_TestCase
 
     /* Tests for single URLs */
     /**
-     * Test if the conversion works with URLs being fed in that do not have a 
+     * Test if the conversion works with URLs being fed in that do not have a
      * querystring already
      */
     public function testSingleUrlsNoQuerystring()
@@ -43,7 +41,7 @@ class UrlCampaignifyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test if the conversion works with URLs being fed in that do not have a 
+     * Test if the conversion works with URLs being fed in that do not have a
      * querystring already, but a "?" at the end
      */
     public function testSingleUrlsQuerySign()
@@ -55,7 +53,7 @@ class UrlCampaignifyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test if the conversion works with URLs being fed in that have a 
+     * Test if the conversion works with URLs being fed in that have a
      * querystring already
      */
     public function testSingleUrlsExistingQuerystring()
@@ -91,7 +89,7 @@ class UrlCampaignifyTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test if the conversion leaves existing campaigns alone 
+     * Test if the conversion leaves existing campaigns alone
      */
     public function testSingleUrlsExistingCampaign()
     {
@@ -196,16 +194,16 @@ class UrlCampaignifyTest extends \PHPUnit_Framework_TestCase
 
     public function testTextMultipleURLs()
     {
-        $input = "Lorem ipsum dolor https://test.com/ sit 
-        amet, consetetur sadipscing elitr, 
-        sed diam nonumy eirmod tempor invidunt ut labore et dolore magna 
-        aliquyam erat, sed diam voluptua. 
+        $input = "Lorem ipsum dolor https://test.com/ sit
+        amet, consetetur sadipscing elitr,
+        sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+        aliquyam erat, sed diam voluptua.
         At http://test.co.uk/test.html";
 
-        $expected = "Lorem ipsum dolor https://test.com/?pk_campaign=news sit 
-        amet, consetetur sadipscing elitr, 
-        sed diam nonumy eirmod tempor invidunt ut labore et dolore magna 
-        aliquyam erat, sed diam voluptua. 
+        $expected = "Lorem ipsum dolor https://test.com/?pk_campaign=news sit
+        amet, consetetur sadipscing elitr,
+        sed diam nonumy eirmod tempor invidunt ut labore et dolore magna
+        aliquyam erat, sed diam voluptua.
         At http://test.co.uk/test.html?pk_campaign=news";
 
         $result = $this->uc->campaignify($input, 'news');
