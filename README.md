@@ -24,9 +24,9 @@ This class aims to make it easier to dynamically append such parameters to URLs.
 Instead of worrying about `?` and `&` you can just do this:
 
     $uc = new UrlCampaignify();
-    
+
     $url = "http://some-blog.tld/cms.php?post=123&layout=default";
-    
+
     $newUrl = $uc->campaignify($url, "newsletter-5", "header-link");
 
 The result has properly appended parameters:
@@ -39,7 +39,7 @@ You can also throw entire blobs of text at the function. It will find and
 campaignify all HTTP URLs in it.
 
     $uc = new UrlCampaignify();
-    
+
     $text = "Look at http://my-site.tld especially".
             "here: http://my-site.tld/news.htm";
 
@@ -64,7 +64,7 @@ the current number of a URL in your keyword in `sprintf()` style. This is useful
 if you want to differentiate between several identical URLs in one text.
 
     $uc = new UrlCampaignify();
-    
+
     $text = "Here comes the header link: http://my-site.tld".
             "here is a long and verbose text".
             "and another link at the end: http://my-site.tld";
@@ -90,3 +90,20 @@ Note that subdomains are not automatically included, so the above instance will
 array, though:
 
     $uc = new UrlCampaignify(array('my-site.tld', 'www.my-site.tld', 'my-other-site.tld'))
+
+### Installation
+
+#### Using composer
+
+URL-Campaignify matches the PSR-0 file layout and is on packagist. You should
+be able to simply type
+
+    composer require  pixelistik/url-campaignify:dev-master
+    composer install
+
+to get the latest code from the master branch included into your project.
+
+#### Just grabbing the file
+
+You can also simply download the single file that provides the class:
+https://github.com/pixelistik/url-campaignify/raw/master/src/Pixelistik/UrlCampaignify.php
